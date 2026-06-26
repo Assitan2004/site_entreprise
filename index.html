@@ -8,9 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    /* ── Reset & Variables Globaux ── */
+  <link rel="stylesheet" href="style.css">
+ 
+   <style>
+      /* ── Reset & Variables Globaux ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -64,14 +65,14 @@
 
     header.scrolled {
       background: rgba(255, 255, 255, 0.95);
-      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     }
 
     nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1.25rem 1.5rem;
+      padding: 1rem 1.5rem;
       max-width: 1400px;
       margin: 0 auto;
     }
@@ -217,8 +218,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 2.25rem;
-      height: 2.25rem;
+      width: 2.5rem;
+      height: 2.5rem;
       color: var(--text-main);
       background: none;
       border: 1px solid var(--border-color);
@@ -226,17 +227,61 @@
       cursor: pointer;
     }
 
-    /* ── Section Hero ── */
+    /* Mobile Menu Overlay Modernisé */
+    .mobile-menu-overlay {
+      position: fixed; 
+      inset: 0; 
+      z-index: 150; 
+      background: #ffffff; 
+      padding: 1.5rem;
+      display: flex; 
+      flex-direction: column; 
+      opacity: 0; 
+      pointer-events: none; 
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(-20px);
+    }
+    .mobile-menu-overlay.open { 
+      opacity: 1; 
+      pointer-events: auto; 
+      transform: translateY(0);
+    }
+    .mobile-menu-header { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      margin-bottom: 3rem; 
+    }
+    .mobile-nav-links { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 1.75rem; 
+    }
+    .mobile-nav-link { 
+      font-size: 1.5rem; 
+      font-weight: 600; 
+      text-decoration: none; 
+      color: var(--text-main); 
+      letter-spacing: -0.02em;
+    }
+
+    /* ── SECTION HERO CORRIGÉE & RESPONSIVE ── */
     .hero-section {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
-      min-height: 100vh;
-      padding: 12rem 1.5rem 4rem 1.5rem;
+      min-height: 95vh;
+      padding: 10rem 1.25rem 4rem 1.25rem;
       text-align: center;
-      background-color: #f4f4f5;
+      box-sizing: border-box;
+    }
+
+    @media (min-width: 768px) {
+      .hero-section {
+        padding: 12rem 2rem 5rem 2rem;
+      }
     }
 
     .grid-bg {
@@ -253,74 +298,126 @@
       pointer-events: none;
     }
 
-  
+    .hero-glow {
+      position: absolute;
+      top: -15%; left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 1400px;
+      height: 100%;
+      max-height: 900px;
+      background: radial-gradient(circle at 50% 35%, rgba(217, 119, 6, 0.16) 0%, rgba(254, 243, 199, 0.10) 40%, transparent 72%);
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(10px);
+    }
 
-    .hero-content { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; }
+    .hero-content { 
+      position: relative; 
+      z-index: 2; 
+      width: 100%;
+      max-width: 900px; 
+      margin: 0 auto; 
+    }
     
     .eyebrow-badge {
-      font-size: 0.95rem;
+      font-size: clamp(0.78rem, 2.5vw, 0.95rem);
       font-weight: 500;
-      color: #1A1A1A;
-      padding: 0.4rem 1rem;
-      background: #fff;
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      background: transparent;
       border: 1px solid var(--border-color);
       border-radius: 9999px;
       display: inline-flex;
       align-items: center;
-      gap: 0.3rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.4rem;
       margin-bottom: 2rem;
       text-decoration: none;
+      max-width: 100%;
+      line-height: 1.4;
+    }
+
+    .eyebrow-badge svg {
+      flex-shrink: 0;
     }
     
     .hero-title {
       color: var(--text-main);
-      font-size: clamp(2.5rem, 6.5vw, 5rem);
+      font-size: clamp(2rem, 7vw, 4.5rem);
       font-weight: 600;
-      line-height: 1.1;
+      line-height: 1.15;
       letter-spacing: -0.04em;
       margin-bottom: 1.5rem;
+      word-break: break-word;
     }
     
     .hero-subtitle {
       margin-bottom: 2.5rem;
-      font-size: clamp(1rem, 2vw, 1.15rem);
+      font-size: clamp(0.95rem, 3.5vw, 1.15rem);
       line-height: 1.6;
       color: var(--text-muted);
       max-width: 640px;
-      margin-left: auto; margin-right: auto;
+      margin-left: auto; 
+      margin-right: auto;
+      font-weight: 400;
     }
     
-    .cta-container { display: flex; justify-content: center; gap: 1rem; }
+    .cta-container { 
+      display: flex; 
+      flex-direction: row;
+      justify-content: center; 
+      gap: 1rem; 
+      width: 100%;
+    }
+
+    .cta-btn, .cta-btn-alt {
+      display: inline-flex; 
+      align-items: center; 
+      justify-content: center;
+      height: 3rem; 
+      padding: 0 1.75rem;
+      border-radius: 9999px;
+      font-size: 0.95rem; 
+      font-weight: 500; 
+      text-decoration: none;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      white-space: nowrap;
+    }
     
     .cta-btn {
-      display: inline-flex; align-items: center; height: 3rem; padding: 0 2rem;
-      background-color: var(--accent-blue); color: #ffffff; border-radius: 9999px;
-      font-size: 0.95rem; font-weight: 500; text-decoration: none;
-      transition: background-color 0.2s ease;
+      background-color: var(--accent-blue); 
+      color: #ffffff; 
     }
     .cta-btn:hover {
       background-color: var(--accent-blue-hover);
     }
     
     .cta-btn-alt {
-      display: inline-flex; align-items: center; height: 3rem; padding: 0 2rem;
-      background-color: transparent; color: var(--text-main); border-radius: 9999px;
-      font-size: 0.95rem; font-weight: 500; text-decoration: none; border: 1px solid var(--border-color);
-      transition: background-color 0.2s ease;
+      background-color: transparent; 
+      color: var(--text-main); 
+      border: 1px solid var(--border-color);
     }
     .cta-btn-alt:hover {
       background-color: #f4f4f5;
     }
-    
-    /* Mobile Menu Overlay */
-    .mobile-menu-overlay {
-      position: fixed; inset: 0; z-index: 150; background: #ffffff; padding: 1.5rem;
-      display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+
+    @media (max-width: 480px) {
+      .hero-section {
+        padding-top: 8.5rem;
+      }
+      .cta-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .cta-btn, .cta-btn-alt {
+        width: 100%;
+        max-width: 280px;
+ white-space: normal;
+      }
     }
-    .mobile-menu-overlay.open { opacity: 1; pointer-events: auto; }
-    .mobile-menu-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 3rem; }
-    .mobile-nav-links { display: flex; flex-direction: column; gap: 1.5rem; }
-    .mobile-nav-link { font-size: 1.25rem; font-weight: 500; text-decoration: none; color: var(--text-main); }
 
     /* ── SECTION ABOUT (BENTO GRID LUXURA TYPE) ── */
     .about-section {
@@ -413,8 +510,8 @@
     .card-tall img {
       height: 90%;
       object-fit: cover;
-      width: 350px;
-
+      width: 100%;
+      max-width: 350px;
     }
 
     .bento-btn {
@@ -562,7 +659,6 @@
       transition: opacity 0.3s ease;
     }
 
-    /* Modification : Utilisation de display none pour intervertir complètement les groupes */
     .gallery-card.hidden-card {
       display: none !important;
     }
@@ -919,7 +1015,7 @@
     }
 
     .btn-submit:hover {
-      background-color: var(--accent-blue);
+      background-color: var(--accent-blue-hover);
     }
 
     .btn-submit:active {
@@ -1044,8 +1140,7 @@
     .footer-socials a:hover {
       color: var(--text-main);
     }
-    
-  </style>
+   </style>
 </head>
 <body>
 
@@ -1082,7 +1177,7 @@
       </div>
 
       <div class="mobile-menu-btn">
-        <button onclick="document.getElementById('mobileMenu').classList.add('open')" aria-label="Ouvrir le menu">
+        <button onclick="toggleMobileMenu(true)" aria-label="Ouvrir le menu">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="18" y2="18"/>
           </svg>
@@ -1094,18 +1189,18 @@
   <div id="mobileMenu" class="mobile-menu-overlay">
     <div class="mobile-menu-header">
       <span class="logo-text">Controls</span>
-      <button style="background:none; border:none;" onclick="document.getElementById('mobileMenu').classList.remove('open')">
+      <button style="background:none; border:none; cursor:pointer;" onclick="toggleMobileMenu(false)" aria-label="Fermer le menu">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/>
         </svg>
       </button>
     </div>
     <div class="mobile-nav-links">
-      <a href="#hero" class="mobile-nav-link" onclick="document.getElementById('mobileMenu').classList.remove('open')">Accueil</a>
-      <a href="#about" class="mobile-nav-link" onclick="document.getElementById('mobileMenu').classList.remove('open')">À propos</a>
-      <a href="#gallery" class="mobile-nav-link" onclick="document.getElementById('mobileMenu').classList.remove('open')">Projets</a>
-      <a href="#faq" class="mobile-nav-link" onclick="document.getElementById('mobileMenu').classList.remove('open')">FAQ</a>
-      <a href="#contact" class="mobile-nav-link" style="color:var(--accent-blue);" onclick="document.getElementById('mobileMenu').classList.remove('open')">Nous contacter &rarr;</a>
+      <a href="#hero" class="mobile-nav-link" onclick="toggleMobileMenu(false)">Accueil</a>
+      <a href="#about" class="mobile-nav-link" onclick="toggleMobileMenu(false)">À propos</a>
+      <a href="#gallery" class="mobile-nav-link" onclick="toggleMobileMenu(false)">Projets</a>
+      <a href="#faq" class="mobile-nav-link" onclick="toggleMobileMenu(false)">FAQ</a>
+      <a href="#contact" class="mobile-nav-link" style="color:var(--accent-blue);" onclick="toggleMobileMenu(false)">Nous contacter &rarr;</a>
     </div>
   </div>
 
@@ -1118,7 +1213,7 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
       <h1 class="hero-title">Des sites et applications conçus avec soin</h1>
-      <p class="hero-subtitle">Nous sommes Thiaba et Assitan, deux étudiantes en informatique. Nous créons des sites web et applications sur mesure, du design à la mise en ligne.</p>
+      <h3 class="hero-subtitle">Nous sommes Asiitan et Thiab, deux étudiantes en informatique. Nous créons des sites web <span style="color: var(--text-muted-light);">et applications sur mesure, du design à la mise en ligne.</span> </h3>
       <div class="cta-container">
         <a href="#gallery" class="cta-btn">Voir nos projets</a>
         <a href="#contact" class="cta-btn-alt">Nous contacter <span style="margin-left:5px; color:var(--accent-blue); font-weight:bold;">&rsaquo;</span></a>
@@ -1182,8 +1277,6 @@
     </div>
 
     <div class="gallery-grid">
-    
-
       <div class="gallery-card page-1" onclick="toggleProject(this, event)">
         <img class="gallery-card-bg" src="Image/visage1.jpg" alt="Skincare">
         <div class="gallery-card-overlay"></div>
@@ -1196,7 +1289,7 @@
           <p class="gallery-card-desc">Site vitrine épuré pour une marque de cosmétiques.</p>
         </div>
         <div class="project-popup-overlay">
-          <a href="https://assitan2004.github.io/site_vitrine_restaurant/"  target="_blank" class="btn-view-project" onclick="event.stopPropagation();">
+          <a href="https://assitan2004.github.io/site_vitrine_restaurant/"   target="_blank" class="btn-view-project" onclick="event.stopPropagation();">
             Voir le projet
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
@@ -1222,8 +1315,6 @@
         </div>
       </div>
 
-      
-
       <div class="gallery-card page-2 hidden-card" onclick="toggleProject(this, event)">
         <img class="gallery-card-bg" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80" alt="Pallet Ross">
         <div class="gallery-card-overlay"></div>
@@ -1243,7 +1334,7 @@
         </div>
       </div>
 
-        <div class="gallery-card page-1" onclick="toggleProject(this, event)">
+      <div class="gallery-card page-1" onclick="toggleProject(this, event)">
         <img class="gallery-card-bg" src="Image/donut.jpg" alt="Chez Biscuit">
         <div class="gallery-card-overlay"></div>
         <div class="gallery-card-content">
@@ -1293,7 +1384,7 @@
           <svg class="faq-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         </summary>
         <div class="faq-content">
-          <p>Sites vitrines, boutiques en ligne et applications web sur mesure. Vous pouvez retrouver plusieurs exemples de nos réalisations dans la section "Nos projets" ci-dessus.</p>
+          <p>Sites vitrines, boutiques en ligne et applications web sur mesure. Vous pouvez retrouver plusieurs examples de nos réalisations dans la section "Nos projets" ci-dessus.</p>
         </div>
       </details>
 
@@ -1321,7 +1412,7 @@
 
   <section id="contact" class="contact-section">
     <div class="contact-info">
-      <a href="#" class="eyebrow-badge" style="background: #2E406B; border-color: rgba(46, 64, 107, 0.1); color: var(--accent-blue);color: #fff;">Contact</a>
+      <a href="#" class="eyebrow-badge" style="background: #2E406B; border-color: rgba(46, 64, 107, 0.1); color: #fff;">Contact</a>
       <h2 class="contact-title">Construisons<br>quelque chose ensemble</h2>
       <p class="contact-subtitle">Une question ou un projet en tête ? Écrivez-nous dès maintenant. Nous vous répondons en moins de 24h.</p>
       <div class="contact-emails">
@@ -1360,41 +1451,53 @@
             <span class="logo-text" style="color: #fff;">Controls</span>
           </a>
         </div>
-        <p>Thiaba Thioye Diene & Assitan Yayi Touré — étudiantes en informatique. Nous concevons des sites et applications sur mesure, du design à la mise en ligne.</p>
+        <p style="color: #fff;">Thiaba Thioye Diene & Assitan Yayi Touré — étudiantes en informatique. Nous concevons des sites et applications sur mesure, du design à la mise en ligne.</p>
       </div>
 
       <div class="footer-links-grid">
         <div class="footer-column">
-          <h4>Menu</h4>
+          <h4 style="color: #fff;">Menu</h4>
           <a href="#hero">Accueil</a>
           <a href="#about">À propos</a>
           <a href="#gallery">Projets</a>
         </div>
         <div class="footer-column">
-          <h4>Aide</h4>
+          <h4 style="color: #fff;">Aide</h4>
           <a href="#faq">FAQ</a>
           <a href="#contact">Contact</a>
         </div>
         <div class="footer-column">
-          <h4>Étudiantes</h4>
-          <a href="mailto:ttdiene07@gmail.com">Thiaba Thioye</a>
+          <h4 style="color: #fff;">Étudiantes</h4>
           <a href="mailto:toureassitanyayi7941@gmail.com">Assitan Yayi</a>
+          <a href="mailto:ttdiene07@gmail.com">Thiaba Thioye</a>
         </div>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <p>&copy; 2026 Controls. Tous droits réservés.</p>
+      <p style="color: #fff;">&copy; 2026 Controls. Tous droits réservés.</p>
       <div class="footer-socials">
-        <a href="#" aria-label="Twitter">Twitter</a>
-        <a href="#" aria-label="GitHub">GitHub</a>
-        <a href="#" aria-label="LinkedIn">LinkedIn</a>
+        <a href="#" style="color: #fff;" aria-label="Twitter">Twitter</a>
+        <a href="#" style="color: #fff;" aria-label="GitHub">GitHub</a>
+        <a href="#" style="color: #fff;" aria-label="LinkedIn">LinkedIn</a>
       </div>
     </div>
   </footer>
 </div>
 
 <script>
+  // Gestion propre de l'ouverture/fermeture du menu mobile
+  function toggleMobileMenu(open) {
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (open) {
+      mobileMenu.classList.add('open');
+      document.body.style.overflow = 'hidden'; // Empêche le défilement du fond
+    } else {
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = ''; // Restaure le défilement
+    }
+  }
+
   // Gestion du Header lors du scroll
   const header = document.getElementById('main-header');
   window.addEventListener('scroll', () => {

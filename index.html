@@ -8,27 +8,50 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
  
    <style>
       /* ── Reset & Variables Globaux ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ☀️ MODE CLAIR */
     :root {
       --bg-color: #ffffff;
       --text-main: #09090b;
       --text-muted: #52525b;
       --text-muted-light: #71717a;
       --border-color: rgba(0, 0, 0, 0.05);
-      
-      /* 🌌 Le Bleu Nuit d'origine de la maquette */
-      --accent-blue: #2E406B; /* Bleu nuit très sombre d'origine */
-      --accent-blue-hover: #111622; /* Encore plus sombre au survol */
-      --accent-blue-light: rgba(30, 37, 48, 0.05); /* Pour le badge */
+      --accent-blue: #2E406B; 
+      --accent-blue-hover: #111622; 
+      --accent-blue-light: rgba(30, 37, 48, 0.05); 
       --bento-bg: #f4f4f5;
-
-      /* ── Application de la police moderne Geist ── */
+      --header-bg: rgba(255, 255, 255, 0.75);
+      --header-scrolled: rgba(255, 255, 255, 0.95);
+      --dropdown-bg: #ffffff;
+      --glow-color: rgba(217, 119, 6, 0.16);
+      --grid-opacity: 0.04;
       --font-sans: 'Geist', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    /* 🌙 MODE SOMBRE */
+    [data-theme="dark"] {
+      --bg-color: #09090b;
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --text-muted-light: #71717a;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --accent-blue: #3b82f6; 
+      --accent-blue-hover: #2563eb; 
+      --accent-blue-light: rgba(59, 130, 246, 0.15); 
+      --bento-bg: rgba(22, 22, 26, 0.7);
+      --header-bg: rgba(9, 9, 11, 0.5);
+      --header-scrolled: rgba(9, 9, 11, 0.85);
+      --dropdown-bg: #18181b;
+      --glow-color: rgba(59, 130, 246, 0.15);
+      --grid-opacity: 0.15;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -37,9 +60,9 @@
       color: var(--text-main);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    /* Forcer l'héritage de la police sur les éléments de formulaire */
     input, textarea, button, select {
       font-family: var(--font-sans);
     }
@@ -57,14 +80,16 @@
       left: 0;
       width: 100%;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.75);
+      background: var(--header-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       transition: all 0.3s ease;
+      border-bottom: 1px solid transparent;
     }
 
     header.scrolled {
-      background: rgba(255, 255, 255, 0.95);
+      background: var(--header-scrolled);
+      border-bottom: 1px solid var(--border-color);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     }
 
@@ -92,13 +117,6 @@
       text-decoration: none;
     }
 
-    .logo-icon {
-      height: 1.5rem;
-      width: 1.5rem;
-      color: var(--text-main);
-      flex-shrink: 0;
-    }
-
     .logo-text {
       font-weight: 700;
       font-size: 1.40rem;
@@ -106,7 +124,6 @@
       color: var(--text-main);
     }
 
-    /* ── Liens centraux ── */
     .desktop-nav-links {
       display: none;
       align-items: center;
@@ -120,13 +137,12 @@
     .nav-link {
       font-size: 1rem;
       font-weight: 500;
-      color: #1A1A1A;
+      color: var(--text-muted);
       text-decoration: none;
       transition: color 0.2s ease;
     }
 
-    .nav-link:hover { color: var(--text-main); }
-    .nav-link.active { color: var(--text-main); }
+    .nav-link:hover, .nav-link.active { color: var(--text-main); }
 
     .nav-dropdown {
       position: relative;
@@ -153,7 +169,7 @@
       top: 100%;
       left: 50%;
       transform: translate(-50%, 10px);
-      background: #ffffff;
+      background: var(--dropdown-bg);
       border: 1px solid var(--border-color);
       border-radius: 0.75rem;
       box-shadow: 0 10px 30px rgba(0,0,0,0.05);
@@ -182,18 +198,41 @@
     }
 
     .dropdown-panel a:hover {
-      background: #f4f4f5;
+      background: var(--bento-bg);
       color: var(--accent-blue);
     }
 
-    /* Bouton Original Bleu Nuit */
     .desktop-login { 
       display: none;
       flex: 1;
       justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
     }
     @media (min-width: 768px) { .desktop-login { display: flex; } }
 
+    /* Bouton Theme Toggle */
+    .theme-toggle-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.6rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease;
+    }
+    .theme-toggle-btn:hover {
+      background-color: var(--bento-bg);
+    }
+    
+    /* Cacher l'icône opposée selon le mode */
+    [data-theme="dark"] .theme-toggle-btn .sun-icon { display: block; }
+    [data-theme="dark"] .theme-toggle-btn .moon-icon { display: none; }
+    .theme-toggle-btn .sun-icon { display: none; }
+*.theme-toggle-btn .moon-icon { display: block; }
     .btn-secondary {
       font-size: 0.9rem;
       font-weight: 500;
@@ -203,7 +242,7 @@
       padding: 0.65rem 1.5rem;
       border-radius: 9999px;
       border: 1px solid var(--accent-blue);
-      transition: background-color 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .btn-secondary:hover {
@@ -211,7 +250,7 @@
       border-color: var(--accent-blue-hover);
     }
 
-    .mobile-menu-btn { display: flex; }
+    .mobile-menu-btn { display: flex; align-items: center; gap: 0.5rem; }
     @media (min-width: 768px) { .mobile-menu-btn { display: none; } }
 
     .mobile-menu-btn button {
@@ -227,12 +266,12 @@
       cursor: pointer;
     }
 
-    /* Mobile Menu Overlay Modernisé */
+    /* Mobile Menu Overlay */
     .mobile-menu-overlay {
       position: fixed; 
       inset: 0; 
       z-index: 150; 
-      background: #ffffff; 
+      background: var(--bg-color); 
       padding: 1.5rem;
       display: flex; 
       flex-direction: column; 
@@ -264,8 +303,13 @@
       color: var(--text-main); 
       letter-spacing: -0.02em;
     }
+    .mobile-menu-close-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
 
-    /* ── SECTION HERO CORRIGÉE & RESPONSIVE ── */
+    /* ── SECTION HERO ── */
     .hero-section {
       position: relative;
       display: flex;
@@ -279,19 +323,17 @@
     }
 
     @media (min-width: 768px) {
-      .hero-section {
-        padding: 12rem 2rem 5rem 2rem;
-      }
+      .hero-section { padding: 12rem 2rem 5rem 2rem; }
     }
 
     .grid-bg {
       position: absolute;
       inset: 0;
       z-index: 0;
-      opacity: 0.4;
+      opacity: 1;
       background-image:
-        linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+        linear-gradient(to right, rgba(120, 120, 120, var(--grid-opacity)) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(120, 120, 120, var(--grid-opacity)) 1px, transparent 1px);
       background-size: 3rem 3rem;
       -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 30%, #000 0%, transparent 75%);
       mask-image: radial-gradient(ellipse 90% 90% at 50% 30%, #000 0%, transparent 75%);
@@ -305,8 +347,7 @@
       width: 100%;
       max-width: 1400px;
       height: 100%;
-      max-height: 900px;
-      background: radial-gradient(circle at 50% 35%, rgba(217, 119, 6, 0.16) 0%, rgba(254, 243, 199, 0.10) 40%, transparent 72%);
+      background: radial-gradient(circle at 50% 35%, var(--glow-color) 0%, rgba(254, 243, 199, 0.02) 40%, transparent 72%);
       pointer-events: none;
       z-index: 1;
       filter: blur(10px);
@@ -339,9 +380,13 @@
       line-height: 1.4;
     }
 
-    .eyebrow-badge svg {
-      flex-shrink: 0;
+    .eyebrow-badge.badge-colored {
+      background-color: var(--accent-blue); 
+      color: #fff; 
+      border-color: transparent;
     }
+
+    .eyebrow-badge svg { flex-shrink: 0; }
     
     .hero-title {
       color: var(--text-main);
@@ -362,6 +407,10 @@
       margin-left: auto; 
       margin-right: auto;
       font-weight: 400;
+    }
+
+    .hero-subtitle-span {
+      color: var(--text-muted-light);
     }
     
     .cta-container { 
@@ -390,36 +439,23 @@
       background-color: var(--accent-blue); 
       color: #ffffff; 
     }
-    .cta-btn:hover {
-      background-color: var(--accent-blue-hover);
-    }
+    .cta-btn:hover { background-color: var(--accent-blue-hover); }
     
     .cta-btn-alt {
       background-color: transparent; 
       color: var(--text-main); 
       border: 1px solid var(--border-color);
     }
-    .cta-btn-alt:hover {
-      background-color: #f4f4f5;
-    }
+    .cta-btn-alt:hover { background-color: var(--bento-bg); }
+    .cta-btn-alt span { margin-left: 5px; font-weight: bold; }
 
     @media (max-width: 480px) {
-      .hero-section {
-        padding-top: 8.5rem;
-      }
-      .cta-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.75rem;
-      }
-      .cta-btn, .cta-btn-alt {
-        width: 100%;
-        max-width: 280px;
- white-space: normal;
-      }
+      .hero-section { padding-top: 8.5rem; }
+      .cta-container { flex-direction: column; align-items: center; gap: 0.75rem; }
+      .cta-btn, .cta-btn-alt { width: 100%; max-width: 280px; white-space: normal; }
     }
 
-    /* ── SECTION ABOUT (BENTO GRID LUXURA TYPE) ── */
+    /* ── SECTION ABOUT (BENTO GRID) ── */
     .about-section {
       max-width: 1200px;
       margin: 0 auto;
@@ -427,9 +463,7 @@
       text-align: center;
     }
 
-    .about-header {
-      margin-bottom: 4rem;
-    }
+    .about-header { margin-bottom: 4rem; }
 
     .about-title {
       font-size: clamp(2rem, 4vw, 2.75rem);
@@ -447,7 +481,6 @@
       margin: 0 auto;
     }
 
-    /* Grille Bento */
     .bento-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -462,9 +495,9 @@
       }
     }
 
-    /* Cartes de la grille */
     .bento-card {
       background-color: var(--bento-bg);
+      border: 1px solid var(--border-color);
       border-radius: 1.5rem;
       overflow: hidden;
       display: flex;
@@ -482,22 +515,14 @@
       color: var(--text-main);
     }
 
-    .bento-card h3 span {
-      color: var(--text-muted-light);
-    }
+    .bento-card h3 span { color: var(--text-muted-light); }
 
-    /* Carte de gauche (Haute) */
-    .card-tall {
-      grid-row: span 1;
-    }
-    @media (min-width: 768px) {
-      .card-tall {
-        grid-row: span 2;
-      }
-    }
+    .card-tall { grid-row: span 1; }
+    @media (min-width: 768px) { .card-tall { grid-row: span 2; } }
 
     .card-tall .bento-img-container {
-      background: #f4f4f5;
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
       border-radius: 1rem;
       height: 260px;
       display: flex;
@@ -507,18 +532,13 @@
       overflow: hidden;
     }
 
-    .card-tall img {
-      height: 90%;
-      object-fit: cover;
-      width: 100%;
-      max-width: 350px;
-    }
+    .card-tall img { height: 90%; object-fit: cover; width: 100%; max-width: 350px; }
 
     .bento-btn {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: #111113;
+      background: var(--accent-blue);
       color: #ffffff;
       padding: 0.65rem 1.25rem;
       border-radius: 9999px;
@@ -531,86 +551,38 @@
     }
     .bento-btn:hover { opacity: 0.9; }
 
-    /* Grille imbriquée à droite pour aligner les petites cartes */
-    .bento-right-column {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-    }
-    @media (min-width: 600px) {
-      .bento-right-column {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
+    .bento-right-column { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+    @media (min-width: 600px) { .bento-right-column { grid-template-columns: 1fr 1fr; } }
     @media (min-width: 768px) {
-      .bento-right-column {
-        grid-column: 2;
-        grid-template-columns: 1.1fr 0.9fr;
-      }
+      .bento-right-column { grid-column: 2; grid-template-columns: 1.1fr 0.9fr; }
     }
 
-    .card-row-top-left {
-      flex-direction: column-reverse;
-      gap: 1.5rem;
-    }
-    .card-row-top-left .bento-img-container {
-      height: 110px;
-      border-radius: 0.75rem;
-      overflow: hidden;
-    }
-    .card-row-top-left img {
-      width: 100%; height: 100%; object-fit: cover;
-    }
+    .card-row-top-left { flex-direction: column-reverse; gap: 1.5rem; }
+    .card-row-top-left .bento-img-container { height: 110px; border-radius: 0.75rem; overflow: hidden; }
+    .card-row-top-left img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* Carte Statistique */
     .card-stat h4 {
       font-size: 3.5rem;
       font-weight: 500;
       letter-spacing: -0.03em;
       line-height: 1;
       margin-bottom: 0.5rem;
+      color: var(--text-main);
     }
-    .card-stat p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-    .card-stat .bento-img-container {
-      height: 100px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: flex-end;
-    }
-    .card-stat img {
-      height: 100%; object-fit: contain;
-    }
+    .card-stat p { font-size: 0.8rem; color: var(--text-muted); }
+    .card-stat .bento-img-container { height: 100px; display: flex; justify-content: flex-end; align-items: flex-end; }
+    .card-stat img { height: 100%; object-fit: contain; }
 
-    /* Grande carte horizontale du bas */
-    .card-wide {
-      flex-direction: column;
-      gap: 2rem;
-    }
+    .card-wide { flex-direction: column; gap: 2rem; }
     @media (min-width: 600px) {
-      .card-wide {
-        grid-column: span 2;
-        flex-direction: row;
-        align-items: center;
-      }
+      .card-wide { grid-column: span 2; flex-direction: row; align-items: center; }
       .card-wide h3 { max-width: 60%; }
     }
-    .card-wide .bento-img-container {
-      width: 100%;
-      height: 180px;
-      border-radius: 1rem;
-      overflow: hidden;
-    }
-    @media (min-width: 600px) {
-      .card-wide .bento-img-container { width: 40%; height: 160px; }
-    }
-    .card-wide img {
-      width: 100%; height: 100%; object-fit: cover; object-position: center 20%;
-    }
+    .card-wide .bento-img-container { width: 100%; height: 180px; border-radius: 1rem; overflow: hidden; }
+    @media (min-width: 600px) { .card-wide .bento-img-container { width: 40%; height: 160px; } }
+    .card-wide img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
 
-    /* ── SECTION GALLERY PROJETS (IMMERSIVE VERTICALS) ── */
+    /* ── SECTION GALLERY PROJETS ── */
     .gallery-section {
       max-width: 1200px;
       margin: 0 auto;
@@ -628,18 +600,7 @@
       margin-bottom: 3rem;
     }
 
-    .gallery-title em {
-      font-style: normal;
-      font-weight: 400;
-      opacity: 0.85;
-    }
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
+    .gallery-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
     @media (min-width: 600px) { .gallery-grid { grid-template-columns: 1fr 1fr; } }
     @media (min-width: 900px) { .gallery-grid { grid-template-columns: 1fr 1fr 1fr; } }
 
@@ -655,13 +616,10 @@
       text-align: left;
       cursor: pointer;
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
-      opacity: 1;
-      transition: opacity 0.3s ease;
+      border: 1px solid var(--border-color);
     }
 
-    .gallery-card.hidden-card {
-      display: none !important;
-    }
+    .gallery-card.hidden-card { display: none !important; }
 
     .gallery-card-bg {
       position: absolute;
@@ -673,24 +631,16 @@
       transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .gallery-card:hover .gallery-card-bg {
-      transform: scale(1.04);
-    }
+    .gallery-card:hover .gallery-card-bg { transform: scale(1.04); }
 
     .gallery-card-overlay {
       position: absolute;
       inset: 0;
       z-index: 1;
       background: linear-gradient(to bottom, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%);
-      transition: background 0.3s ease;
     }
 
-    .gallery-card-content {
-      position: relative;
-      z-index: 2;
-      color: #ffffff;
-      transition: opacity 0.3s ease;
-    }
+    .gallery-card-content { position: relative; z-index: 2; color: #ffffff; }
 
     .gallery-card-metric {
       display: inline-flex;
@@ -703,19 +653,8 @@
       letter-spacing: -0.01em;
     }
 
-    .gallery-card-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.4rem;
-      line-height: 1.2;
-    }
-
-    .gallery-card-desc {
-      font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.65);
-      line-height: 1.4;
-    }
+    .gallery-card-title { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.4rem; line-height: 1.2; }
+    .gallery-card-desc { font-size: 0.85rem; color: rgba(255, 255, 255, 0.65); line-height: 1.4; }
 
     .project-popup-overlay {
       position: absolute;
@@ -732,10 +671,7 @@
       transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .gallery-card.active-click .project-popup-overlay {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .gallery-card.active-click .project-popup-overlay { opacity: 1; pointer-events: auto; }
 
     .btn-view-project {
       background-color: #ffffff;
@@ -753,36 +689,18 @@
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .gallery-card.active-click .btn-view-project {
-      transform: scale(1);
-    }
+    .gallery-card.active-click .btn-view-project { transform: scale(1); }
+    .btn-view-project:hover { background-color: #f4f4f5; }
 
-    .btn-view-project:hover {
-      background-color: #f4f4f5;
-    }
-
-    .gallery-dots {
-      display: flex;
-      justify-content: center;
-      gap: 0.4rem;
-      margin-top: 2.5rem;
-    }
-
+    .gallery-dots { display: flex; justify-content: center; gap: 0.4rem; margin-top: 2.5rem; }
     .gallery-dot {
-      width: 0.5rem;
-      height: 0.5rem;
-      border-radius: 9999px;
-      background: #e4e4e7;
-      border: none;
-      cursor: pointer;
+      width: 0.5rem; height: 0.5rem; border-radius: 9999px;
+      background: #e4e4e7; border: none; cursor: pointer;
       transition: background-color 0.2s ease, transform 0.2s ease;
     }
-    .gallery-dot.active {
-      background: #71717a;
-      transform: scale(1.1);
-    }
+    .gallery-dot.active { background: #71717a; transform: scale(1.1); }
 
-    /* ── SECTION FAQ ── */
+    /* ── SECTION FAQ INTERACTIVE ACCORDEON ── */
     .faq-section {
       max-width: 800px; 
       margin: 0 auto;
@@ -799,20 +717,10 @@
       margin-bottom: 3rem;
     }
 
-    .faq-container {
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+    .faq-container { text-align: left; display: flex; flex-direction: column; gap: 0.5rem; }
+    .faq-item { border-bottom: 1px solid var(--border-color); padding: 0.5rem 0; }
 
-    .faq-item {
-      border-bottom: 1px solid var(--border-color);
-      padding: 0.5rem 0;
-    }
-
-    .faq-item summary {
-      list-style: none; 
+    .faq-trigger {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -825,40 +733,29 @@
       transition: color 0.2s ease;
     }
 
-    .faq-item summary::-webkit-details-marker {
-      display: none;
+    .faq-trigger:hover { color: var(--accent-blue); }
+
+    .faq-icon { width: 1.25rem; height: 1.25rem; color: var(--text-muted); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    
+    /* Animation classe active */
+    .faq-item.active .faq-icon { transform: rotate(45deg); color: var(--text-main); }
+
+    .faq-content { 
+      max-height: 0;
+      overflow: hidden;
+      font-size: 0.95rem; 
+      line-height: 1.6; 
+      color: var(--text-muted); 
+      transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
+      padding: 0 0.5rem;
     }
 
-    .faq-item summary:hover {
-      color: var(--accent-blue);
-    }
-
-    .faq-icon {
-      width: 1.25rem;
-      height: 1.25rem;
-      color: var(--text-muted);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .faq-item[open] .faq-icon {
-      transform: rotate(45deg);
-      color: var(--text-main);
-    }
-
-    .faq-content {
+    .faq-item.active .faq-content {
+      max-height: 200px; /* Grande valeur de sécurité pour l'animation */
       padding: 0 0.5rem 1.5rem 0.5rem;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      color: var(--text-muted);
-      animation: faq-fade 0.3s ease-out;
     }
 
-    @keyframes faq-fade {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── SECTION CONTACT (ULTRA MODERNE VERCEL/BENTO STYLE) ── */
+    /* ── SECTION CONTACT ── */
     .contact-section {
       max-width: 1200px; 
       margin: 0 auto;
@@ -866,175 +763,137 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 4rem;
-      align-items: start;
+      align-items: center;
+      position: relative;
     }
 
     @media (min-width: 900px) {
-      .contact-section {
-        grid-template-columns: 1fr 1.2fr;
-        gap: 6rem;
-      }
+      .contact-section { grid-template-columns: 1fr 1.1fr; gap: 5rem; }
     }
 
-    .contact-info {
-      text-align: left;
+    .contact-info { text-align: left; z-index: 2; }
+    .contact-title { 
+      font-size: clamp(2.5rem, 5vw, 3.5rem); 
+      font-weight: 700; 
+      color: var(--text-main); 
+      letter-spacing: -0.04em; 
+      line-height: 1.1; 
+      margin-top: 1rem; 
+      margin-bottom: 1.5rem; 
     }
-
-    .contact-title {
-      font-size: clamp(2.5rem, 5vw, 3.5rem);
-      font-weight: 600;
-      color: var(--text-main);
-      letter-spacing: -0.04em;
-      line-height: 1.1;
-      margin-top: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .contact-subtitle {
-      font-size: 1.05rem;
-      line-height: 1.6;
-      color: var(--text-muted);
-      max-width: 480px;
-    }
-
-    .contact-emails {
-      margin-top: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .contact-email-link {
-      font-size: 0.95rem;
-      color: var(--accent-blue);
-      text-decoration: none;
-      font-weight: 500;
-      transition: opacity 0.2s ease;
-    }
+    .contact-subtitle { font-size: 1.05rem; line-height: 1.6; color: var(--text-muted); max-width: 480px; margin-bottom: 3rem; }
     
-    .contact-email-link:hover {
+    .contact-channels { display: flex; flex-direction: row; flex-wrap: wrap; gap: 2rem; }
+    .channel-item { display: flex; flex-direction: column; gap: 0.35rem; }
+    .channel-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted-light); font-weight: 600; }
+    .contact-email-link { 
+      font-size: 1rem; 
+      color: var(--text-main); 
+      text-decoration: none; 
+      font-weight: 500; 
+      transition: color 0.2s ease;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 2px;
+    }
+    .contact-email-link:hover { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
+
+    /* Carte Flottante */
+    .contact-card-wrapper { position: relative; z-index: 2; }
+    .contact-card-glow {
+      position: absolute;
+      inset: -20px;
+      background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
       opacity: 0.8;
     }
 
-    /* Container du formulaire moderne style carte Bento */
     .contact-card {
-      background: #ffffff;
+      background: var(--dropdown-bg);
       border: 1px solid var(--border-color);
       border-radius: 2rem;
-      padding: 2.5rem;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+      padding: 3rem 2.5rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
       position: relative;
-      overflow: hidden;
+      z-index: 1;
     }
 
-    /* Petite lueur d'ambiance discrète derrière le formulaire */
-    .contact-card::before {
-      content: "";
-      position: absolute;
-      top: -20%; right: -20%;
-      width: 250px; height: 250px;
-      background: radial-gradient(circle, rgba(46, 64, 107, 0.05) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .contact-form {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-      text-align: left;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      position: relative;
-    }
-
-    .form-group label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted-light);
-      transition: color 0.2s ease;
-    }
-
-    .contact-form input,
-    .contact-form textarea {
+    .contact-form { display: flex; flex-direction: column; gap: 2rem; }
+    
+    /* Input à Label Flottant */
+    .form-group-floating { position: relative; width: 100%; }
+    
+    .form-group-floating input, .form-group-floating textarea {
       width: 100%;
-      padding: 0.85rem 0;
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid rgba(9, 9, 11, 0.1);
-      border-radius: 0;
-      font-size: 1.05rem;
+      padding: 1.5rem 1rem 0.5rem 1rem;
+      background: var(--bento-bg);
+      border: 1px solid transparent;
+      border-radius: 1rem;
+      font-size: 1rem;
       color: var(--text-main);
       outline: none;
-      transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .form-group-floating textarea { resize: none; min-height: 120px; }
+
+    .form-group-floating label {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      font-size: 1rem;
+      color: var(--text-muted);
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: left top;
     }
 
-    .contact-form input::placeholder,
-    .contact-form textarea::placeholder {
-      color: rgba(9, 9, 11, 0.3);
-    }
-
-    /* Effet ligne animée au focus */
-    .contact-form input:focus,
-    .contact-form textarea:focus {
-      border-bottom-color: var(--accent-blue);
-    }
-
-    .form-group:focus-within label {
+    /* Animation du label quand on clique ou écrit */
+    .form-group-floating input:focus ~ label,
+    .form-group-floating input:not(:placeholder-shown) ~ label,
+    .form-group-floating textarea:focus ~ label,
+    .form-group-floating textarea:not(:placeholder-shown) ~ label {
+      transform: translateY(-0.6rem) scale(0.75);
       color: var(--accent-blue);
+      font-weight: 500;
     }
 
-    .contact-form textarea {
-      resize: none;
-      min-height: 90px;
+    .form-group-floating input:focus, .form-group-floating textarea:focus {
+      border-color: var(--border-color);
+      background: #f4f4f5;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.02), 0 0 0 3px var(--accent-blue-light);
     }
 
-    /* Bouton Ultra Moderne Expansif */
     .btn-submit {
-      width: 100%;
-      height: 3.25rem;
-      background-color: #2E406B;
+      width: 50%;
+      height: 3.5rem;
+      background-color: var(--accent-blue);
+      margin: 0 auto;
       color: #ffffff;
       border: none;
-      border-radius: 9999px;
-      font-size: 0.95rem;
+      border-radius: 3rem;
+      font-size: 1rem;
       font-weight: 500;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.75rem;
-      position: relative;
-      overflow: hidden;
-      transition: background-color 0.2s ease, transform 0.1s ease;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px var(--accent-blue-light);
     }
 
-    .btn-submit:hover {
-      background-color: var(--accent-blue-hover);
-    }
+    .btn-submit:hover { background-color: var(--accent-blue-hover); transform: translateY(-1px); }
+    .btn-submit:active { transform: translateY(1px); }
+    .btn-submit svg { transition: transform 0.2s ease; }
+    .btn-submit:hover svg { transform: translateX(3px); }
 
-    .btn-submit:active {
-      transform: scale(0.98);
-    }
-
-    .btn-submit svg {
-      transition: transform 0.2s ease;
-    }
-
-    .btn-submit:hover svg {
-      transform: translateX(3px) translateY(-3px);
-    }
-
-    /* ── FOOTER MINIMALISTE ── */
+    /* ── FOOTER NETTOYÉ ── */
     footer {
       border-top: 1px solid var(--border-color);
-      background-color: #ffffff;
+      background-color: var(--accent-blue);
       padding: 4rem 1.5rem 3rem 1.5rem;
+      color: #ffffff;
     }
 
     .footer-container {
@@ -1046,64 +905,20 @@
     }
 
     @media (min-width: 768px) {
-      .footer-container {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: flex-start;
-      }
+      .footer-container { flex-direction: row; justify-content: space-between; align-items: flex-start; }
     }
 
-    .footer-brand {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      max-width: 400px;
-    }
+    .footer-brand { display: flex; flex-direction: column; gap: 0.75rem; max-width: 400px; }
+    .footer-brand p { font-size: 0.85rem; line-height: 1.6; opacity: 0.85; color: #ffffff; }
+    .footer-logo-text { color: #ffffff !important; }
 
-    .footer-brand p {
-      font-size: 0.85rem;
-      color: #fff;
-      line-height: 1.6;
-      opacity: 0.85;
-    }
+    .footer-links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem; }
+    @media (min-width: 480px) { .footer-links-grid { grid-template-columns: repeat(3, 1fr); } }
 
-    .footer-links-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 3rem;
-    }
-
-    @media (min-width: 480px) {
-      .footer-links-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    .footer-column {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .footer-column h4 {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #fff;
-      letter-spacing: -0.01em;
-    }
-
-    .footer-column a {
-      font-size: 0.85rem;
-      color: #fff;
-      text-decoration: none;
-      transition: color 0.15s ease;
-      opacity: 0.8;
-    }
-
-    .footer-column a:hover {
-      color: var(--text-main);
-      opacity: 1;
-    }
+    .footer-column { display: flex; flex-direction: column; gap: 1rem; }
+    .footer-column h4 { font-size: 0.85rem; font-weight: 600; color: #ffffff; letter-spacing: -0.01em; }
+    .footer-column a { font-size: 0.85rem; color: #ffffff; text-decoration: none; transition: opacity 0.15s ease; opacity: 0.8; }
+    .footer-column a:hover { opacity: 1; }
 
     .footer-bottom {
       max-width: 1200px;
@@ -1115,31 +930,17 @@
       flex-direction: column;
       gap: 1rem;
       font-size: 0.8rem;
-      color: #fff;
+      color: #ffffff;
       opacity: 0.9;
     }
 
     @media (min-width: 600px) {
-      .footer-bottom {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-      }
+      .footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
     }
 
-    .footer-socials {
-      display: flex;
-      gap: 1.25rem;
-    }
-
-    .footer-socials a {
-      color: #fff;
-      text-decoration: none;
-      transition: color 0.15s ease;
-    }
-    .footer-socials a:hover {
-      color: var(--text-main);
-    }
+    .footer-socials { display: flex; gap: 1.25rem; }
+    .footer-socials a { color: #ffffff; text-decoration: none; transition: opacity 0.15s ease; opacity: 0.8; }
+    .footer-socials a:hover { opacity: 1; }
    </style>
 </head>
 <body>
@@ -1173,6 +974,10 @@
       </div>
 
       <div class="desktop-login">
+        <button class="theme-toggle-btn" id="themeToggle" aria-label="Changer de thème">
+          <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
         <a href="#contact" class="btn-secondary">Contact</a>
       </div>
 
@@ -1189,7 +994,7 @@
   <div id="mobileMenu" class="mobile-menu-overlay">
     <div class="mobile-menu-header">
       <span class="logo-text">Controls</span>
-      <button style="background:none; border:none; cursor:pointer;" onclick="toggleMobileMenu(false)" aria-label="Fermer le menu">
+      <button class="mobile-menu-close-btn" onclick="toggleMobileMenu(false)" aria-label="Fermer le menu">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/>
         </svg>
@@ -1213,19 +1018,24 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
       <h1 class="hero-title">Des sites et applications conçus avec soin</h1>
-      <h3 class="hero-subtitle">Nous sommes Asiitan et Thiab, deux étudiantes en informatique. Nous créons des sites web <span style="color: var(--text-muted-light);">et applications sur mesure, du design à la mise en ligne.</span> </h3>
+      <h3 class="hero-subtitle">Nous sommes Assitan et Thiaba, deux étudiantes en informatique. Nous créons des sites web <span class="hero-subtitle-span">et applications sur mesure, du design à la mise en ligne.</span> </h3>
       <div class="cta-container">
         <a href="#gallery" class="cta-btn">Voir nos projets</a>
-        <a href="#contact" class="cta-btn-alt">Nous contacter <span style="margin-left:5px; color:var(--accent-blue); font-weight:bold;">&rsaquo;</span></a>
+        <a href="#contact" class="cta-btn-alt">Nous contacter <span>&rsaquo;</span></a>
       </div>
     </div>
   </section>
 
   <section id="about" class="about-section">
     <div class="about-header">
-      <a href="#" class="eyebrow-badge" style="background: #2E406B; border-color: var(--border-color);color: #fff;">À Propos</a>
+      <span class="eyebrow-badge badge-colored">À Propos</span>
       <h2 class="about-title">Deux étudiantes, une passion pour le code</h2>
-      <p class="about-subtitle">Thiaba Thioye Diene et Assitan Yayi Touré conçoivent des sites et applications soignés, du premier croquis à la mise en ligne.</p>
+      <p class="about-subtitle" style=" font-size: 1.30rem;
+      font-weight: 500;
+      line-height: 1.4;
+      letter-spacing: -0.02em;
+      color: var(--text-main);">Thiaba Thioye Diene et Assitan Yayi Touré conçoivent des sites <span style="color: var(--text-muted);"> et applications soignés, du premier croquis à la mise en ligne.</span></p>
+
     </div>
 
     <div class="bento-grid">
@@ -1235,7 +1045,7 @@
         </div>
         <div>
           <h3>Des sites pensés sur mesure, du design à l'intégration, pour chaque projet client.</h3>
-          <a href="#gallery" class="bento-btn" style="background-color: #2E406B;">
+          <a href="#gallery" class="bento-btn">
             Voir nos réalisations 
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
@@ -1252,8 +1062,7 @@
 
         <div class="bento-card card-stat">
           <div>
-            <h4>4</h4>
-            <p>Projets de sites réalisés ensemble.</p>
+            <h3>4 Projets de<span> sites réalisés ensemble.</span></h3>
           </div>
           <div class="bento-img-container">
             <img src="Image/µabout4.jpg" alt="Réalisations">
@@ -1272,7 +1081,7 @@
 
   <section id="gallery" class="gallery-section">
     <div>
-      <a href="#" class="eyebrow-badge" style="background: #2E406B; border-color: var(--border-color); color: #fff;">Nos projets</a>
+      <span class="eyebrow-badge badge-colored">Nos projets</span>
       <h2 class="gallery-title">Nos sites réalisés ensemble</h2>
     </div>
 
@@ -1289,7 +1098,7 @@
           <p class="gallery-card-desc">Site vitrine épuré pour une marque de cosmétiques.</p>
         </div>
         <div class="project-popup-overlay">
-          <a href="https://assitan2004.github.io/site_vitrine_restaurant/"   target="_blank" class="btn-view-project" onclick="event.stopPropagation();">
+          <a href="https://assitan2004.github.io/Skincare/" target="_blank" class="btn-view-project" onclick="event.stopPropagation();">
             Voir le projet
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
@@ -1339,14 +1148,14 @@
         <div class="gallery-card-overlay"></div>
         <div class="gallery-card-content">
           <span class="gallery-card-metric">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></polygon></svg>
             Site e-commerce
           </span>
           <h3 class="gallery-card-title">Chez Biscuit</h3>
           <p class="gallery-card-desc">Boutique en ligne de donuts artisanaux, du catalogue au panier.</p>
         </div>
         <div class="project-popup-overlay">
-          <a href="https://assitan2004.github.io/Skincare/" target="_blank" class="btn-view-project" onclick="event.stopPropagation();">
+          <a href="https://assitan2004.github.io/Donut/" target="_blank" class="btn-view-project" onclick="event.stopPropagation();">
             Voir le projet
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
@@ -1363,111 +1172,125 @@
 
   <section id="faq" class="faq-section">
     <div>
-      <a href="#" class="eyebrow-badge" style="background: #2E406B; border-color: var(--border-color);color: #fff;">FAQ</a>
+      <span class="eyebrow-badge badge-colored">FAQ</span>
       <h2 class="faq-title">Questions fréquemment posées</h2>
     </div>
 
     <div class="faq-container">
-      <details class="faq-item">
-        <summary>
+      <div class="faq-item">
+        <div class="faq-trigger" onclick="toggleFaq(this)">
           <span>Qui êtes-vous ?</span>
           <svg class="faq-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        </summary>
+        </div>
         <div class="faq-content">
           <p>Nous sommes Thiaba Thioye Diene et Assitan Yayi Touré, deux étudiantes en informatique. Nous concevons et développons des sites web et des applications pour des particuliers et de petites entreprises.</p>
         </div>
-      </details>
+      </div>
 
-      <details class="faq-item">
-        <summary>
+      <div class="faq-item">
+        <div class="faq-trigger" onclick="toggleFaq(this)">
           <span>Quels types de projets réalisez-vous ?</span>
           <svg class="faq-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        </summary>
-        <div class="faq-content">
-          <p>Sites vitrines, boutiques en ligne et applications web sur mesure. Vous pouvez retrouver plusieurs examples de nos réalisations dans la section "Nos projets" ci-dessus.</p>
         </div>
-      </details>
+        <div class="faq-content">
+          <p>Sites vitrines, boutiques en ligne et applications web sur mesure. Vous pouvez retrouver plusieurs exemples de nos réalisations dans la section "Nos projets" ci-dessus.</p>
+        </div>
+      </div>
 
-      <details class="faq-item">
-        <summary>
+      <div class="faq-item">
+        <div class="faq-trigger" onclick="toggleFaq(this)">
           <span>Comment vous contacter ?</span>
           <svg class="faq-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        </summary>
+        </div>
         <div class="faq-content">
           <p>Le plus simple est d'utiliser le formulaire en bas de cette page, ou de nous écrire directement par e-mail. Nous répondons généralement en moins de 24h.</p>
         </div>
-      </details>
+      </div>
 
-      <details class="faq-item">
-        <summary>
+      <div class="faq-item">
+        <div class="faq-trigger" onclick="toggleFaq(this)">
           <span>Le site est-il optimisé pour mobile ?</span>
           <svg class="faq-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        </summary>
+        </div>
         <div class="faq-content">
           <p>Oui. Toutes les sections, y compris le menu, la grille et la galerie de projets, sont conçues avec CSS Flexbox et Grid et s'adaptent à tous les écrans.</p>
         </div>
-      </details>
+      </div>
     </div>
   </section>
 
   <section id="contact" class="contact-section">
     <div class="contact-info">
-      <a href="#" class="eyebrow-badge" style="background: #2E406B; border-color: rgba(46, 64, 107, 0.1); color: #fff;">Contact</a>
-      <h2 class="contact-title">Construisons<br>quelque chose ensemble</h2>
-      <p class="contact-subtitle">Une question ou un projet en tête ? Écrivez-nous dès maintenant. Nous vous répondons en moins de 24h.</p>
-      <div class="contact-emails">
-        <a href="mailto:ttdiene07@gmail.com" class="contact-email-link">ttdiene07@gmail.com</a>
-        <a href="mailto:toureassitanyayi7941@gmail.com" class="contact-email-link">toureassitanyayi7941@gmail.com</a>
+      <span class="eyebrow-badge" style="background-color: #2E406B;color: #fff;">Contact</span>
+      <h2 class="contact-title">Construisons quelque chose ensemble</h2>
+      <p class="contact-subtitle" style=" font-size: 1.30rem;
+      font-weight: 500;
+      line-height: 1.4;
+      letter-spacing: -0.02em;
+      color:#78788b;">Une question, un projet ou une idée de site web ? Discutons-en dès aujourd'hui.</p>
+      
+      <div class="contact-channels">
+        <div class="channel-item">
+          <span class="channel-label">Thiaba Thioye</span>
+          <a href="mailto:ttdiene07@gmail.com" class="contact-email-link">ttdiene07@gmail.com</a>
+        </div>
+        <div class="channel-item">
+          <span class="channel-label">Assitan Yayi</span>
+          <a href="mailto:toureassitanyayi7941@gmail.com" class="contact-email-link">toureassitanyayi7941@gmail.com</a>
+        </div>
       </div>
     </div>
 
-    <div class="contact-card">
-      <form class="contact-form" onsubmit="event.preventDefault();">
-        <div class="form-group">
-          <label for="name">Nom complet</label>
-          <input type="text" id="name" placeholder="John Doe" required />
-        </div>
-        <div class="form-group">
-          <label for="email">Adresse e-mail</label>
-          <input type="email" id="email" placeholder="john@example.com" required />
-        </div>
-        <div class="form-group">
-          <label for="message">Votre message</label>
-          <textarea id="message" placeholder="Dites-nous en plus sur votre besoin..." required></textarea>
-        </div>
-        <button type="submit" class="btn-submit">
-          Envoyer le message
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-        </button>
-      </form>
+    <div class="contact-card-wrapper">
+      <div class="contact-card-glow"></div>
+      <div class="contact-card">
+        <form class="contact-form" onsubmit="event.preventDefault();">
+          <div class="form-group-floating">
+            <input type="text" id="name" placeholder=" " required />
+            <label for="name">Votre nom complet</label>
+          </div>
+          <div class="form-group-floating">
+            <input type="email" id="email" placeholder=" " required />
+            <label for="email">Adresse e-mail</label>
+          </div>
+          <div class="form-group-floating">
+            <textarea id="message" placeholder=" " required></textarea>
+            <label for="message">Votre message</label>
+          </div>
+          <button type="submit" class="btn-submit">
+            Envoyer le message
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </form>
+      </div>
     </div>
   </section>
 
-  <footer style="background-color: #2E406B;">
-    <div class="footer-container" >
+  <footer>
+    <div class="footer-container">
       <div class="footer-brand">
         <div class="logo-area">
           <a href="#hero" class="logo-link">
-            <span class="logo-text" style="color: #fff;">Controls</span>
+            <span class="logo-text footer-logo-text">Controls</span>
           </a>
         </div>
-        <p style="color: #fff;">Thiaba Thioye Diene & Assitan Yayi Touré — étudiantes en informatique. Nous concevons des sites et applications sur mesure, du design à la mise en ligne.</p>
+        <p>Thiaba Thioye Diene & Assitan Yayi Touré — étudiantes en informatique. Nous concevons des sites et applications sur mesure, du design à la mise en ligne.</p>
       </div>
 
       <div class="footer-links-grid">
         <div class="footer-column">
-          <h4 style="color: #fff;">Menu</h4>
+          <h4>Menu</h4>
           <a href="#hero">Accueil</a>
           <a href="#about">À propos</a>
           <a href="#gallery">Projets</a>
         </div>
         <div class="footer-column">
-          <h4 style="color: #fff;">Aide</h4>
+          <h4>Aide</h4>
           <a href="#faq">FAQ</a>
           <a href="#contact">Contact</a>
         </div>
         <div class="footer-column">
-          <h4 style="color: #fff;">Étudiantes</h4>
+          <h4>Étudiantes</h4>
           <a href="mailto:toureassitanyayi7941@gmail.com">Assitan Yayi</a>
           <a href="mailto:ttdiene07@gmail.com">Thiaba Thioye</a>
         </div>
@@ -1475,26 +1298,45 @@
     </div>
 
     <div class="footer-bottom">
-      <p style="color: #fff;">&copy; 2026 Controls. Tous droits réservés.</p>
+      <p>&copy; 2026 Controls. Tous droits réservés.</p>
       <div class="footer-socials">
-        <a href="#" style="color: #fff;" aria-label="Twitter">Twitter</a>
-        <a href="#" style="color: #fff;" aria-label="GitHub">GitHub</a>
-        <a href="#" style="color: #fff;" aria-label="LinkedIn">LinkedIn</a>
+        <a href="#" aria-label="Twitter">Twitter</a>
+        <a href="#" aria-label="GitHub">GitHub</a>
+        <a href="#" aria-label="LinkedIn">LinkedIn</a>
       </div>
     </div>
   </footer>
 </div>
 
 <script>
-  // Gestion propre de l'ouverture/fermeture du menu mobile
+  // ── SCRIPT DU MODE SOMBRE / CLAIR ──
+  const themeToggleBtn = document.getElementById('themeToggle');
+  const currentTheme = localStorage.getItem('theme');
+  
+  if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+  }
+
+  themeToggleBtn.addEventListener('click', () => {
+    let theme = document.documentElement.getAttribute('data-theme');
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'light');
+      localStorage.setItem('theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    }
+  });
+
+  // Gestion de l'ouverture/fermeture du menu mobile
   function toggleMobileMenu(open) {
     const mobileMenu = document.getElementById('mobileMenu');
     if (open) {
       mobileMenu.classList.add('open');
-      document.body.style.overflow = 'hidden'; // Empêche le défilement du fond
+      document.body.style.overflow = 'hidden'; 
     } else {
       mobileMenu.classList.remove('open');
-      document.body.style.overflow = ''; // Restaure le défilement
+      document.body.style.overflow = ''; 
     }
   }
 
@@ -1513,48 +1355,84 @@
     if (event.target.closest('.btn-view-project')) return;
 
     const isActive = card.classList.contains('active-click');
-    
-    document.querySelectorAll('.gallery-card').forEach(c => {
-      c.classList.remove('active-click');
-    });
+    document.querySelectorAll('.gallery-card').forEach(c => c.classList.remove('active-click'));
 
     if (!isActive) {
       card.classList.add('active-click');
     }
   }
 
-  // Fermer le bouton si l'utilisateur clique n'importe où en dehors d'une carte
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.gallery-card')) {
-      document.querySelectorAll('.gallery-card').forEach(card => {
-        card.classList.remove('active-click');
-      });
+      document.querySelectorAll('.gallery-card').forEach(card => card.classList.remove('active-click'));
     }
   });
 
-  // Nouveau script d'interversion complète des groupes de cartes au clic
+  // Interversion des groupes de cartes au clic
   function changeGalleryView(index) {
     const dots = document.querySelectorAll('#galleryButtons .gallery-dot');
     const firstGroup = document.querySelectorAll('.gallery-card.page-1');
     const secondGroup = document.querySelectorAll('.gallery-card.page-2');
     
-    // Activer l'état visuel du dot sélectionné
     dots.forEach((dot, idx) => {
       if(idx === index) dot.classList.add('active');
       else dot.classList.remove('active');
     });
 
-    // Inversion totale : clic sur le premier bouton = page 1 active
     if (index === 0) {
       firstGroup.forEach(card => card.classList.remove('hidden-card'));
       secondGroup.forEach(card => card.classList.add('hidden-card'));
-    } 
-    // Clic sur le 2ème ou 3ème bouton = page 1 s'efface, page 2 arrive
-    else {
+    } else {
       firstGroup.forEach(card => card.classList.add('hidden-card'));
       secondGroup.forEach(card => card.classList.remove('hidden-card'));
     }
   }
+
+  // Accordéon FAQ Animé personnalisé
+  function toggleFaq(trigger) {
+    const item = trigger.parentElement;
+    const isActive = item.classList.contains('active');
+    
+    // Ferme toutes les autres questions ouverts (optionnel)
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+    
+    if (!isActive) {
+      item.classList.add('active');
+    }
+  }
+
+  // ── JS DE DEFILEMENT (HIGHLIGHT DU MENU AU SCROLL) ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.desktop-nav-links .nav-link');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '-50% 0px -50% 0px' // Déclenche l'événement quand la section prend le milieu de l'écran
+  };
+
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        
+        navLinks.forEach(link => {
+          // Si le lien pointe vers l'id de la section active
+          if (link.getAttribute('href') === `#${id}`) {
+            link.classList.add('active');
+          } else {
+            // Gère aussi le cas du dropdown de projets
+            if (id === 'gallery' && link.textContent.trim() === 'Projets') {
+              link.classList.add('active');
+            } else if (link.textContent.trim() !== 'Projets' || id !== 'gallery') {
+              link.classList.remove('active');
+            }
+          }
+        });
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => sectionObserver.observe(section));
 </script>
 </body>
 </html>

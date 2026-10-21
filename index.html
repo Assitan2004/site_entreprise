@@ -4,943 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Controls — Thiaba & Assitan</title>
-  
+  <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
  
    <style>
-      /* ── Reset & Variables Globaux ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    /* ☀️ MODE CLAIR */
-    :root {
-      --bg-color: #ffffff;
-      --text-main: #09090b;
-      --text-muted: #52525b;
-      --text-muted-light: #71717a;
-      --border-color: rgba(0, 0, 0, 0.05);
-      --accent-blue: #2E406B; 
-      --accent-blue-hover: #111622; 
-      --accent-blue-light: rgba(30, 37, 48, 0.05); 
-      --bento-bg: #f4f4f5;
-      --header-bg: rgba(255, 255, 255, 0.75);
-      --header-scrolled: rgba(255, 255, 255, 0.95);
-      --dropdown-bg: #ffffff;
-      --glow-color: rgba(217, 119, 6, 0.16);
-      --grid-opacity: 0.04;
-      --font-sans: 'Geist', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    }
-
-    /* 🌙 MODE SOMBRE */
-    [data-theme="dark"] {
-      --bg-color: #09090b;
-      --text-main: #f4f4f5;
-      --text-muted: #a1a1aa;
-      --text-muted-light: #71717a;
-      --border-color: rgba(255, 255, 255, 0.08);
-      --accent-blue: #3b82f6; 
-      --accent-blue-hover: #2563eb; 
-      --accent-blue-light: rgba(59, 130, 246, 0.15); 
-      --bento-bg: rgba(22, 22, 26, 0.7);
-      --header-bg: rgba(9, 9, 11, 0.5);
-      --header-scrolled: rgba(9, 9, 11, 0.85);
-      --dropdown-bg: #18181b;
-      --glow-color: rgba(59, 130, 246, 0.15);
-      --grid-opacity: 0.15;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: var(--font-sans);
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    input, textarea, button, select {
-      font-family: var(--font-sans);
-    }
-
-    .container {
-      min-height: 100vh;
-      width: 100%;
-      position: relative;
-    }
-
-    /* ── HEADER MINIMALISTE ── */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 100;
-      background: var(--header-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      transition: all 0.3s ease;
-      border-bottom: 1px solid transparent;
-    }
-
-    header.scrolled {
-      background: var(--header-scrolled);
-      border-bottom: 1px solid var(--border-color);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 1.5rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    @media (min-width: 768px) { nav { padding: 1.5rem 4rem; } }
-
-    .logo-area { 
-      display: flex; 
-      align-items: center;
-      flex: 1;
-    }
-
-    .logo-link {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-    }
-
-    .logo-text {
-      font-weight: 700;
-      font-size: 1.40rem;
-      letter-spacing: -0.03em;
-      color: var(--text-main);
-    }
-
-    .desktop-nav-links {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 1.75rem;
-      flex: 2;
-    }
-
-    @media (min-width: 768px) { .desktop-nav-links { display: flex; } }
-
-    .nav-link {
-      font-size: 1rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .nav-link:hover, .nav-link.active { color: var(--text-main); }
-
-    .nav-dropdown {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      cursor: pointer;
-    }
-
-    .nav-dropdown .dropdown-arrow {
-      width: 14px;
-      height: 14px;
-      color: var(--text-muted);
-      transition: transform 0.2s ease;
-    }
-
-    .nav-dropdown:hover .dropdown-arrow {
-      transform: rotate(180deg);
-      color: var(--text-main);
-    }
-
-    .dropdown-panel {
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translate(-50%, 10px);
-      background: var(--dropdown-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 0.75rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-      padding: 0.5rem;
-      display: flex;
-      flex-direction: column;
-      width: 180px;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.2s ease;
-    }
-
-    .nav-dropdown:hover .dropdown-panel {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translate(-50%, 5px);
-    }
-
-    .dropdown-panel a {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      padding: 0.5rem 0.75rem;
-      border-radius: 0.5rem;
-      transition: all 0.2s ease;
-    }
-
-    .dropdown-panel a:hover {
-      background: var(--bento-bg);
-      color: var(--accent-blue);
-    }
-
-    .desktop-login { 
-      display: none;
-      flex: 1;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 1rem;
-    }
-    @media (min-width: 768px) { .desktop-login { display: flex; } }
-
-    /* Bouton Theme Toggle */
-    .theme-toggle-btn {
-      background: none;
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 0.6rem;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.2s ease;
-    }
-    .theme-toggle-btn:hover {
-      background-color: var(--bento-bg);
-    }
-    
-    /* Cacher l'icône opposée selon le mode */
-    [data-theme="dark"] .theme-toggle-btn .sun-icon { display: block; }
-    [data-theme="dark"] .theme-toggle-btn .moon-icon { display: none; }
-    .theme-toggle-btn .sun-icon { display: none; }
-*.theme-toggle-btn .moon-icon { display: block; }
-    .btn-secondary {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: #ffffff;
-      background-color: var(--accent-blue);
-      text-decoration: none;
-      padding: 0.65rem 1.5rem;
-      border-radius: 9999px;
-      border: 1px solid var(--accent-blue);
-      transition: all 0.2s ease;
-    }
-
-    .btn-secondary:hover {
-      background-color: var(--accent-blue-hover);
-      border-color: var(--accent-blue-hover);
-    }
-
-    .mobile-menu-btn { display: flex; align-items: center; gap: 0.5rem; }
-    @media (min-width: 768px) { .mobile-menu-btn { display: none; } }
-
-    .mobile-menu-btn button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.5rem;
-      height: 2.5rem;
-      color: var(--text-main);
-      background: none;
-      border: 1px solid var(--border-color);
-      border-radius: 0.5rem;
-      cursor: pointer;
-    }
-
-    /* Mobile Menu Overlay */
-    .mobile-menu-overlay {
-      position: fixed; 
-      inset: 0; 
-      z-index: 150; 
-      background: var(--bg-color); 
-      padding: 1.5rem;
-      display: flex; 
-      flex-direction: column; 
-      opacity: 0; 
-      pointer-events: none; 
-      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      transform: translateY(-20px);
-    }
-    .mobile-menu-overlay.open { 
-      opacity: 1; 
-      pointer-events: auto; 
-      transform: translateY(0);
-    }
-    .mobile-menu-header { 
-      display: flex; 
-      align-items: center; 
-      justify-content: space-between; 
-      margin-bottom: 3rem; 
-    }
-    .mobile-nav-links { 
-      display: flex; 
-      flex-direction: column; 
-      gap: 1.75rem; 
-    }
-    .mobile-nav-link { 
-      font-size: 1.5rem; 
-      font-weight: 600; 
-      text-decoration: none; 
-      color: var(--text-main); 
-      letter-spacing: -0.02em;
-    }
-    .mobile-menu-close-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    /* ── SECTION HERO ── */
-    .hero-section {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      min-height: 95vh;
-      padding: 10rem 1.25rem 4rem 1.25rem;
-      text-align: center;
-      box-sizing: border-box;
-    }
-
-    @media (min-width: 768px) {
-      .hero-section { padding: 12rem 2rem 5rem 2rem; }
-    }
-
-    .grid-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      opacity: 1;
-      background-image:
-        linear-gradient(to right, rgba(120, 120, 120, var(--grid-opacity)) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(120, 120, 120, var(--grid-opacity)) 1px, transparent 1px);
-      background-size: 3rem 3rem;
-      -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 30%, #000 0%, transparent 75%);
-      mask-image: radial-gradient(ellipse 90% 90% at 50% 30%, #000 0%, transparent 75%);
-      pointer-events: none;
-    }
-
-    .hero-glow {
-      position: absolute;
-      top: -15%; left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 1400px;
-      height: 100%;
-      background: radial-gradient(circle at 50% 35%, var(--glow-color) 0%, rgba(254, 243, 199, 0.02) 40%, transparent 72%);
-      pointer-events: none;
-      z-index: 1;
-      filter: blur(10px);
-    }
-
-    .hero-content { 
-      position: relative; 
-      z-index: 2; 
-      width: 100%;
-      max-width: 900px; 
-      margin: 0 auto; 
-    }
-    
-    .eyebrow-badge {
-      font-size: clamp(0.78rem, 2.5vw, 0.95rem);
-      font-weight: 500;
-      color: var(--text-main);
-      padding: 0.5rem 1rem;
-      background: transparent;
-      border: 1px solid var(--border-color);
-      border-radius: 9999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-bottom: 2rem;
-      text-decoration: none;
-      max-width: 100%;
-      line-height: 1.4;
-    }
-
-    .eyebrow-badge.badge-colored {
-      background-color: var(--accent-blue); 
-      color: #fff; 
-      border-color: transparent;
-    }
-
-    .eyebrow-badge svg { flex-shrink: 0; }
-    
-    .hero-title {
-      color: var(--text-main);
-      font-size: clamp(2rem, 7vw, 4.5rem);
-      font-weight: 600;
-      line-height: 1.15;
-      letter-spacing: -0.04em;
-      margin-bottom: 1.5rem;
-      word-break: break-word;
-    }
-    
-    .hero-subtitle {
-      margin-bottom: 2.5rem;
-      font-size: clamp(0.95rem, 3.5vw, 1.15rem);
-      line-height: 1.6;
-      color: var(--text-muted);
-      max-width: 640px;
-      margin-left: auto; 
-      margin-right: auto;
-      font-weight: 400;
-    }
-
-    .hero-subtitle-span {
-      color: var(--text-muted-light);
-    }
-    
-    .cta-container { 
-      display: flex; 
-      flex-direction: row;
-      justify-content: center; 
-      gap: 1rem; 
-      width: 100%;
-    }
-
-    .cta-btn, .cta-btn-alt {
-      display: inline-flex; 
-      align-items: center; 
-      justify-content: center;
-      height: 3rem; 
-      padding: 0 1.75rem;
-      border-radius: 9999px;
-      font-size: 0.95rem; 
-      font-weight: 500; 
-      text-decoration: none;
-      transition: background-color 0.2s ease, transform 0.1s ease;
-      white-space: nowrap;
-    }
-    
-    .cta-btn {
-      background-color: var(--accent-blue); 
-      color: #ffffff; 
-    }
-    .cta-btn:hover { background-color: var(--accent-blue-hover); }
-    
-    .cta-btn-alt {
-      background-color: transparent; 
-      color: var(--text-main); 
-      border: 1px solid var(--border-color);
-    }
-    .cta-btn-alt:hover { background-color: var(--bento-bg); }
-    .cta-btn-alt span { margin-left: 5px; font-weight: bold; }
-
-    @media (max-width: 480px) {
-      .hero-section { padding-top: 8.5rem; }
-      .cta-container { flex-direction: column; align-items: center; gap: 0.75rem; }
-      .cta-btn, .cta-btn-alt { width: 100%; max-width: 280px; white-space: normal; }
-    }
-
-    /* ── SECTION ABOUT (BENTO GRID) ── */
-    .about-section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 6rem 1.5rem 3rem 1.5rem;
-      text-align: center;
-    }
-
-    .about-header { margin-bottom: 4rem; }
-
-    .about-title {
-      font-size: clamp(2rem, 4vw, 2.75rem);
-      font-weight: 500;
-      color: var(--text-main);
-      letter-spacing: -0.03em;
-      margin-bottom: 1rem;
-    }
-
-    .about-subtitle {
-      font-size: 1rem;
-      line-height: 1.5;
-      color: var(--text-muted);
-      max-width: 580px;
-      margin: 0 auto;
-    }
-
-    .bento-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-      text-align: left;
-    }
-
-    @media (min-width: 768px) {
-      .bento-grid {
-        grid-template-columns: 1fr 1.6fr;
-        grid-template-rows: auto auto;
-      }
-    }
-
-    .bento-card {
-      background-color: var(--bento-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 1.5rem;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 2.25rem;
-      position: relative;
-    }
-
-    .bento-card h3 {
-      font-size: 1.45rem;
-      font-weight: 500;
-      line-height: 1.4;
-      letter-spacing: -0.02em;
-      color: var(--text-main);
-    }
-
-    .bento-card h3 span { color: var(--text-muted-light); }
-
-    .card-tall { grid-row: span 1; }
-    @media (min-width: 768px) { .card-tall { grid-row: span 2; } }
-
-    .card-tall .bento-img-container {
-      background: var(--bg-color);
-      border: 1px solid var(--border-color);
-      border-radius: 1rem;
-      height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 2.5rem;
-      overflow: hidden;
-    }
-
-    .card-tall img { height: 90%; object-fit: cover; width: 100%; max-width: 350px; }
-
-    .bento-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--accent-blue);
-      color: #ffffff;
-      padding: 0.65rem 1.25rem;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      text-decoration: none;
-      width: fit-content;
-      margin-top: 1.5rem;
-      transition: opacity 0.2s ease;
-    }
-    .bento-btn:hover { opacity: 0.9; }
-
-    .bento-right-column { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
-    @media (min-width: 600px) { .bento-right-column { grid-template-columns: 1fr 1fr; } }
-    @media (min-width: 768px) {
-      .bento-right-column { grid-column: 2; grid-template-columns: 1.1fr 0.9fr; }
-    }
-
-    .card-row-top-left { flex-direction: column-reverse; gap: 1.5rem; }
-    .card-row-top-left .bento-img-container { height: 110px; border-radius: 0.75rem; overflow: hidden; }
-    .card-row-top-left img { width: 100%; height: 100%; object-fit: cover; }
-
-    .card-stat h4 {
-      font-size: 3.5rem;
-      font-weight: 500;
-      letter-spacing: -0.03em;
-      line-height: 1;
-      margin-bottom: 0.5rem;
-      color: var(--text-main);
-    }
-    .card-stat p { font-size: 0.8rem; color: var(--text-muted); }
-    .card-stat .bento-img-container { height: 100px; display: flex; justify-content: flex-end; align-items: flex-end; }
-    .card-stat img { height: 100%; object-fit: contain; }
-
-    .card-wide { flex-direction: column; gap: 2rem; }
-    @media (min-width: 600px) {
-      .card-wide { grid-column: span 2; flex-direction: row; align-items: center; }
-      .card-wide h3 { max-width: 60%; }
-    }
-    .card-wide .bento-img-container { width: 100%; height: 180px; border-radius: 1rem; overflow: hidden; }
-    @media (min-width: 600px) { .card-wide .bento-img-container { width: 40%; height: 160px; } }
-    .card-wide img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
-
-    /* ── SECTION GALLERY PROJETS ── */
-    .gallery-section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 6rem 1.5rem 3rem 1.5rem;
-      text-align: center;
-    }
-
-    .gallery-title {
-      font-size: clamp(2.25rem, 5vw, 3.5rem);
-      font-weight: 600;
-      color: var(--text-main);
-      letter-spacing: -0.04em;
-      line-height: 1.1;
-      margin-top: 0.5rem;
-      margin-bottom: 3rem;
-    }
-
-    .gallery-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-    @media (min-width: 600px) { .gallery-grid { grid-template-columns: 1fr 1fr; } }
-    @media (min-width: 900px) { .gallery-grid { grid-template-columns: 1fr 1fr 1fr; } }
-
-    .gallery-card {
-      position: relative;
-      border-radius: 1.75rem;
-      height: 520px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 2.25rem;
-      text-align: left;
-      cursor: pointer;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
-      border: 1px solid var(--border-color);
-    }
-
-    .gallery-card.hidden-card { display: none !important; }
-
-    .gallery-card-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .gallery-card:hover .gallery-card-bg { transform: scale(1.04); }
-
-    .gallery-card-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      background: linear-gradient(to bottom, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%);
-    }
-
-    .gallery-card-content { position: relative; z-index: 2; color: #ffffff; }
-
-    .gallery-card-metric {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 0.75rem;
-      letter-spacing: -0.01em;
-    }
-
-    .gallery-card-title { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.4rem; line-height: 1.2; }
-    .gallery-card-desc { font-size: 0.85rem; color: rgba(255, 255, 255, 0.65); line-height: 1.4; }
-
-    .project-popup-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(9, 9, 11, 0.2);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      z-index: 4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .gallery-card.active-click .project-popup-overlay { opacity: 1; pointer-events: auto; }
-
-    .btn-view-project {
-      background-color: #ffffff;
-      color: #09090b;
-      padding: 0.85rem 1.75rem;
-      border-radius: 9999px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      transform: scale(0.9);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .gallery-card.active-click .btn-view-project { transform: scale(1); }
-    .btn-view-project:hover { background-color: #f4f4f5; }
-
-    .gallery-dots { display: flex; justify-content: center; gap: 0.4rem; margin-top: 2.5rem; }
-    .gallery-dot {
-      width: 0.5rem; height: 0.5rem; border-radius: 9999px;
-      background: #e4e4e7; border: none; cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.2s ease;
-    }
-    .gallery-dot.active { background: #71717a; transform: scale(1.1); }
-
-    /* ── SECTION FAQ INTERACTIVE ACCORDEON ── */
-    .faq-section {
-      max-width: 800px; 
-      margin: 0 auto;
-      padding: 6rem 1.5rem 3rem 1.5rem;
-      text-align: center;
-    }
-
-    .faq-title {
-      font-size: clamp(2rem, 4vw, 2.75rem);
-      font-weight: 600;
-      color: var(--text-main);
-      letter-spacing: -0.03em;
-      margin-top: 0.5rem;
-      margin-bottom: 3rem;
-    }
-
-    .faq-container { text-align: left; display: flex; flex-direction: column; gap: 0.5rem; }
-    .faq-item { border-bottom: 1px solid var(--border-color); padding: 0.5rem 0; }
-
-    .faq-trigger {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.25rem 0.5rem;
-      font-size: 1.05rem;
-      font-weight: 500;
-      color: var(--text-main);
-      cursor: pointer;
-      user-select: none;
-      transition: color 0.2s ease;
-    }
-
-    .faq-trigger:hover { color: var(--accent-blue); }
-
-    .faq-icon { width: 1.25rem; height: 1.25rem; color: var(--text-muted); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-    
-    /* Animation classe active */
-    .faq-item.active .faq-icon { transform: rotate(45deg); color: var(--text-main); }
-
-    .faq-content { 
-      max-height: 0;
-      overflow: hidden;
-      font-size: 0.95rem; 
-      line-height: 1.6; 
-      color: var(--text-muted); 
-      transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
-      padding: 0 0.5rem;
-    }
-
-    .faq-item.active .faq-content {
-      max-height: 200px; /* Grande valeur de sécurité pour l'animation */
-      padding: 0 0.5rem 1.5rem 0.5rem;
-    }
-
-    /* ── SECTION CONTACT ── */
-    .contact-section {
-      max-width: 1200px; 
-      margin: 0 auto;
-      padding: 8rem 1.5rem;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 4rem;
-      align-items: center;
-      position: relative;
-    }
-
-    @media (min-width: 900px) {
-      .contact-section { grid-template-columns: 1fr 1.1fr; gap: 5rem; }
-    }
-
-    .contact-info { text-align: left; z-index: 2; }
-    .contact-title { 
-      font-size: clamp(2.5rem, 5vw, 3.5rem); 
-      font-weight: 700; 
-      color: var(--text-main); 
-      letter-spacing: -0.04em; 
-      line-height: 1.1; 
-      margin-top: 1rem; 
-      margin-bottom: 1.5rem; 
-    }
-    .contact-subtitle { font-size: 1.05rem; line-height: 1.6; color: var(--text-muted); max-width: 480px; margin-bottom: 3rem; }
-    
-    .contact-channels { display: flex; flex-direction: row; flex-wrap: wrap; gap: 2rem; }
-    .channel-item { display: flex; flex-direction: column; gap: 0.35rem; }
-    .channel-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted-light); font-weight: 600; }
-    .contact-email-link { 
-      font-size: 1rem; 
-      color: var(--text-main); 
-      text-decoration: none; 
-      font-weight: 500; 
-      transition: color 0.2s ease;
-      border-bottom: 1px dashed var(--border-color);
-      padding-bottom: 2px;
-    }
-    .contact-email-link:hover { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
-
-    /* Carte Flottante */
-    .contact-card-wrapper { position: relative; z-index: 2; }
-    .contact-card-glow {
-      position: absolute;
-      inset: -20px;
-      background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.8;
-    }
-
-    .contact-card {
-      background: var(--dropdown-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 2rem;
-      padding: 3rem 2.5rem;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
-      position: relative;
-      z-index: 1;
-    }
-
-    .contact-form { display: flex; flex-direction: column; gap: 2rem; }
-    
-    /* Input à Label Flottant */
-    .form-group-floating { position: relative; width: 100%; }
-    
-    .form-group-floating input, .form-group-floating textarea {
-      width: 100%;
-      padding: 1.5rem 1rem 0.5rem 1rem;
-      background: var(--bento-bg);
-      border: 1px solid transparent;
-      border-radius: 1rem;
-      font-size: 1rem;
-      color: var(--text-main);
-      outline: none;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    
-    .form-group-floating textarea { resize: none; min-height: 120px; }
-
-    .form-group-floating label {
-      position: absolute;
-      left: 1rem;
-      top: 1rem;
-      font-size: 1rem;
-      color: var(--text-muted);
-      pointer-events: none;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      transform-origin: left top;
-    }
-
-    /* Animation du label quand on clique ou écrit */
-    .form-group-floating input:focus ~ label,
-    .form-group-floating input:not(:placeholder-shown) ~ label,
-    .form-group-floating textarea:focus ~ label,
-    .form-group-floating textarea:not(:placeholder-shown) ~ label {
-      transform: translateY(-0.6rem) scale(0.75);
-      color: var(--accent-blue);
-      font-weight: 500;
-    }
-
-    .form-group-floating input:focus, .form-group-floating textarea:focus {
-      border-color: var(--border-color);
-      background: #f4f4f5;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.02), 0 0 0 3px var(--accent-blue-light);
-    }
-
-    .btn-submit {
-      width: 50%;
-      height: 3.5rem;
-      background-color: var(--accent-blue);
-      margin: 0 auto;
-      color: #ffffff;
-      border: none;
-      border-radius: 3rem;
-      font-size: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 15px var(--accent-blue-light);
-    }
-
-    .btn-submit:hover { background-color: var(--accent-blue-hover); transform: translateY(-1px); }
-    .btn-submit:active { transform: translateY(1px); }
-    .btn-submit svg { transition: transform 0.2s ease; }
-    .btn-submit:hover svg { transform: translateX(3px); }
-
-    /* ── FOOTER NETTOYÉ ── */
-    footer {
-      border-top: 1px solid var(--border-color);
-      background-color: var(--accent-blue);
-      padding: 4rem 1.5rem 3rem 1.5rem;
-      color: #ffffff;
-    }
-
-    .footer-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 3rem;
-    }
-
-    @media (min-width: 768px) {
-      .footer-container { flex-direction: row; justify-content: space-between; align-items: flex-start; }
-    }
-
-    .footer-brand { display: flex; flex-direction: column; gap: 0.75rem; max-width: 400px; }
-    .footer-brand p { font-size: 0.85rem; line-height: 1.6; opacity: 0.85; color: #ffffff; }
-    .footer-logo-text { color: #ffffff !important; }
-
-    .footer-links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem; }
-    @media (min-width: 480px) { .footer-links-grid { grid-template-columns: repeat(3, 1fr); } }
-
-    .footer-column { display: flex; flex-direction: column; gap: 1rem; }
-    .footer-column h4 { font-size: 0.85rem; font-weight: 600; color: #ffffff; letter-spacing: -0.01em; }
-    .footer-column a { font-size: 0.85rem; color: #ffffff; text-decoration: none; transition: opacity 0.15s ease; opacity: 0.8; }
-    .footer-column a:hover { opacity: 1; }
-
-    .footer-bottom {
-      max-width: 1200px;
-      margin: 0 auto;
-      margin-top: 3rem;
-      padding-top: 2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      font-size: 0.8rem;
-      color: #ffffff;
-      opacity: 0.9;
-    }
-
-    @media (min-width: 600px) {
-      .footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
-    }
-
-    .footer-socials { display: flex; gap: 1.25rem; }
-    .footer-socials a { color: #ffffff; text-decoration: none; transition: opacity 0.15s ease; opacity: 0.8; }
-    .footer-socials a:hover { opacity: 1; }
+   
    </style>
 </head>
 <body>
@@ -974,7 +45,7 @@
       </div>
 
       <div class="desktop-login">
-        <button class="theme-toggle-btn" id="themeToggle" aria-label="Changer de thème">
+        <button class="theme-toggle-btn platform-theme-toggle" aria-label="Changer de thème">
           <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
           <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
         </button>
@@ -1007,6 +78,13 @@
       <a href="#faq" class="mobile-nav-link" onclick="toggleMobileMenu(false)">FAQ</a>
       <a href="#contact" class="mobile-nav-link" style="color:var(--accent-blue);" onclick="toggleMobileMenu(false)">Nous contacter &rarr;</a>
     </div>
+    
+    <div class="mobile-menu-footer">
+       <button class="theme-toggle-btn platform-theme-toggle" aria-label="Changer de thème">
+          <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+       </button>
+    </div>
   </div>
 
   <section id="hero" class="hero-section">
@@ -1030,12 +108,7 @@
     <div class="about-header">
       <span class="eyebrow-badge badge-colored">À Propos</span>
       <h2 class="about-title">Deux étudiantes, une passion pour le code</h2>
-      <p class="about-subtitle" style=" font-size: 1.30rem;
-      font-weight: 500;
-      line-height: 1.4;
-      letter-spacing: -0.02em;
-      color: var(--text-main);">Thiaba Thioye Diene et Assitan Yayi Touré conçoivent des sites <span style="color: var(--text-muted);"> et applications soignés, du premier croquis à la mise en ligne.</span></p>
-
+      <p class="about-subtitle" style=" font-size: 1.30rem; font-weight: 500; line-height: 1.4; letter-spacing: -0.02em; color: var(--text-main);">Thiaba Thioye Diene et Assitan Yayi Touré conçoivent des sites <span style="color: var(--text-muted);"> et applications soignés, du premier croquis à la mise en ligne.</span></p>
     </div>
 
     <div class="bento-grid">
@@ -1083,12 +156,14 @@
     <div>
       <span class="eyebrow-badge badge-colored">Nos projets</span>
       <h2 class="gallery-title">Nos sites réalisés ensemble</h2>
+      <p class="gallery-subtitle">Cliquez sur un projet pour découvrir le site en ligne.</p>
     </div>
 
     <div class="gallery-grid">
       <div class="gallery-card page-1" onclick="toggleProject(this, event)">
         <img class="gallery-card-bg" src="Image/visage1.jpg" alt="Skincare">
         <div class="gallery-card-overlay"></div>
+        <span class="gallery-card-hint" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
         <div class="gallery-card-content">
           <span class="gallery-card-metric">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -1096,6 +171,7 @@
           </span>
           <h3 class="gallery-card-title">Skincare</h3>
           <p class="gallery-card-desc">Site vitrine épuré pour une marque de cosmétiques.</p>
+          <span class="gallery-card-cta">Voir le projet <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
         </div>
         <div class="project-popup-overlay">
           <a href="https://assitan2004.github.io/Skincare/" target="_blank" class="btn-view-project" onclick="event.stopPropagation();">
@@ -1108,6 +184,7 @@
       <div class="gallery-card page-1" onclick="toggleProject(this, event)">
         <img class="gallery-card-bg" src="Image/restaurant_luxe.jpg" alt="Restaurant">
         <div class="gallery-card-overlay"></div>
+        <span class="gallery-card-hint" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
         <div class="gallery-card-content">
           <span class="gallery-card-metric">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
@@ -1115,6 +192,7 @@
           </span>
           <h3 class="gallery-card-title">Restaurant</h3>
           <p class="gallery-card-desc">Site vitrine pour un restaurant, menu et présentation.</p>
+          <span class="gallery-card-cta">Voir le projet <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
         </div>
         <div class="project-popup-overlay">
           <a href="https://assitan2004.github.io/site_vitrine_restaurant/" target="_blank" class="btn-view-project" onclick="event.stopPropagation();">
@@ -1127,6 +205,7 @@
       <div class="gallery-card page-2 hidden-card" onclick="toggleProject(this, event)">
         <img class="gallery-card-bg" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80" alt="Pallet Ross">
         <div class="gallery-card-overlay"></div>
+        <span class="gallery-card-hint" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
         <div class="gallery-card-content">
           <span class="gallery-card-metric">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -1134,6 +213,7 @@
           </span>
           <h3 class="gallery-card-title">Pallet Ross</h3>
           <p class="gallery-card-desc">Catalogue de mobilier et biens d'exception, avec panier et favoris.</p>
+          <span class="gallery-card-cta">Voir le projet <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
         </div>
         <div class="project-popup-overlay">
           <a href="https://assitan2004.github.io/Meuble/" target="_blank" class="btn-view-project" onclick="event.stopPropagation();">
@@ -1146,6 +226,7 @@
       <div class="gallery-card page-1" onclick="toggleProject(this, event)">
         <img class="gallery-card-bg" src="Image/donut.jpg" alt="Chez Biscuit">
         <div class="gallery-card-overlay"></div>
+        <span class="gallery-card-hint" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
         <div class="gallery-card-content">
           <span class="gallery-card-metric">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></polygon></svg>
@@ -1153,6 +234,7 @@
           </span>
           <h3 class="gallery-card-title">Chez Biscuit</h3>
           <p class="gallery-card-desc">Boutique en ligne de donuts artisanaux, du catalogue au panier.</p>
+          <span class="gallery-card-cta">Voir le projet <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
         </div>
         <div class="project-popup-overlay">
           <a href="https://assitan2004.github.io/Donut/" target="_blank" class="btn-view-project" onclick="event.stopPropagation();">
@@ -1166,7 +248,6 @@
     <div class="gallery-dots" id="galleryButtons">
       <button class="gallery-dot active" aria-label="Page 1" onclick="changeGalleryView(0)"></button>
       <button class="gallery-dot" aria-label="Page 2" onclick="changeGalleryView(1)"></button>
-      <button class="gallery-dot" aria-label="Page 3" onclick="changeGalleryView(2)"></button>
     </div>
   </section>
 
@@ -1223,11 +304,7 @@
     <div class="contact-info">
       <span class="eyebrow-badge" style="background-color: #2E406B;color: #fff;">Contact</span>
       <h2 class="contact-title">Construisons quelque chose ensemble</h2>
-      <p class="contact-subtitle" style=" font-size: 1.30rem;
-      font-weight: 500;
-      line-height: 1.4;
-      letter-spacing: -0.02em;
-      color:#78788b;">Une question, un projet ou une idée de site web ? Discutons-en dès aujourd'hui.</p>
+      <p class="contact-subtitle">Une question, un projet ou une idée de site web ? Discutons-en dès aujourd'hui.</p>
       
       <div class="contact-channels">
         <div class="channel-item">
@@ -1308,131 +385,6 @@
   </footer>
 </div>
 
-<script>
-  // ── SCRIPT DU MODE SOMBRE / CLAIR ──
-  const themeToggleBtn = document.getElementById('themeToggle');
-  const currentTheme = localStorage.getItem('theme');
-  
-  if (currentTheme) {
-    document.documentElement.setAttribute('data-theme', currentTheme);
-  }
-
-  themeToggleBtn.addEventListener('click', () => {
-    let theme = document.documentElement.getAttribute('data-theme');
-    if (theme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'light');
-      localStorage.setItem('theme', 'light');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-    }
-  });
-
-  // Gestion de l'ouverture/fermeture du menu mobile
-  function toggleMobileMenu(open) {
-    const mobileMenu = document.getElementById('mobileMenu');
-    if (open) {
-      mobileMenu.classList.add('open');
-      document.body.style.overflow = 'hidden'; 
-    } else {
-      mobileMenu.classList.remove('open');
-      document.body.style.overflow = ''; 
-    }
-  }
-
-  // Gestion du Header lors du scroll
-  const header = document.getElementById('main-header');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-  }, { passive: true });
-
-  // Toggle d'apparition du bouton au clic sur l'image
-  function toggleProject(card, event) {
-    if (event.target.closest('.btn-view-project')) return;
-
-    const isActive = card.classList.contains('active-click');
-    document.querySelectorAll('.gallery-card').forEach(c => c.classList.remove('active-click'));
-
-    if (!isActive) {
-      card.classList.add('active-click');
-    }
-  }
-
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.gallery-card')) {
-      document.querySelectorAll('.gallery-card').forEach(card => card.classList.remove('active-click'));
-    }
-  });
-
-  // Interversion des groupes de cartes au clic
-  function changeGalleryView(index) {
-    const dots = document.querySelectorAll('#galleryButtons .gallery-dot');
-    const firstGroup = document.querySelectorAll('.gallery-card.page-1');
-    const secondGroup = document.querySelectorAll('.gallery-card.page-2');
-    
-    dots.forEach((dot, idx) => {
-      if(idx === index) dot.classList.add('active');
-      else dot.classList.remove('active');
-    });
-
-    if (index === 0) {
-      firstGroup.forEach(card => card.classList.remove('hidden-card'));
-      secondGroup.forEach(card => card.classList.add('hidden-card'));
-    } else {
-      firstGroup.forEach(card => card.classList.add('hidden-card'));
-      secondGroup.forEach(card => card.classList.remove('hidden-card'));
-    }
-  }
-
-  // Accordéon FAQ Animé personnalisé
-  function toggleFaq(trigger) {
-    const item = trigger.parentElement;
-    const isActive = item.classList.contains('active');
-    
-    // Ferme toutes les autres questions ouverts (optionnel)
-    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
-    
-    if (!isActive) {
-      item.classList.add('active');
-    }
-  }
-
-  // ── JS DE DEFILEMENT (HIGHLIGHT DU MENU AU SCROLL) ──
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.desktop-nav-links .nav-link');
-
-  const observerOptions = {
-    root: null,
-    rootMargin: '-50% 0px -50% 0px' // Déclenche l'événement quand la section prend le milieu de l'écran
-  };
-
-  const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.getAttribute('id');
-        
-        navLinks.forEach(link => {
-          // Si le lien pointe vers l'id de la section active
-          if (link.getAttribute('href') === `#${id}`) {
-            link.classList.add('active');
-          } else {
-            // Gère aussi le cas du dropdown de projets
-            if (id === 'gallery' && link.textContent.trim() === 'Projets') {
-              link.classList.add('active');
-            } else if (link.textContent.trim() !== 'Projets' || id !== 'gallery') {
-              link.classList.remove('active');
-            }
-          }
-        });
-      }
-    });
-  }, observerOptions);
-
-  sections.forEach(section => sectionObserver.observe(section));
-</script>
+<script src="script.js"></script>
 </body>
 </html>
